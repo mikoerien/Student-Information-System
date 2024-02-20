@@ -1,0 +1,33 @@
+.add-student-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 20px;
+  width: 60%;
+  margin-left: -11%;
+  padding-right: 20px; 
+}
+
+.add-student-container form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; 
+  max-width: 400px;
+  margin: 0 auto; 
+}
+
+.add-student-container h2 {
+  text-align: center;
+  font-size: 30px;
+  margin-bottom: 30px;
+}
+
+.add-student-container form > * {
+  margin-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+  .add-student-container {
+    margin-right: 0;
+  }
+}
