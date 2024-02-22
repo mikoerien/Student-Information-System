@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, TextField } from '@mui/material';
 import '../Pages/AddStudent.css';
+import axios from 'axios';
 
 function AddStudent() {
   const [idnumber, setID] = useState("");
@@ -9,6 +10,7 @@ function AddStudent() {
   const [middlename, setMiddleName] = useState("");
   const [course, setCourse] = useState("");
   const [year, setYear] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleAddStudent = async () => {
     const studentData = {
@@ -21,38 +23,29 @@ function AddStudent() {
     };
 
     try {
-      const response = await fetch("http://localhost:1337/addStudent", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(studentData),
-      });
+      const response = await axios.post("http://localhost:1337/addStudent", studentData);
 
-      const result = await response.json();
-
-      console.log("Server Response:", result);
-
-      if (result.success) {
+      if (response.data.success) {
         setID("");
         setFirstName("");
         setLastName("");
         setMiddleName("");
         setCourse("");
         setYear("");
-        alert(result.message);
+        alert(response.data.message);
       } else {
-        alert("Failed to add student. Please try again.");
+        setErrorMessage("Failed to add student. Please try again.");
       }
     } catch (error) {
       console.error("Error adding student:", error);
-      alert("An error occurred. Please try again.");
+      setErrorMessage("An error occurred. Please try again.");
     }
   };
 
   return (
     <div className="add-student-container">
       <h1>Add Student</h1>
+      {errorMessage && <p>Error: {errorMessage}</p>}
       <form>
         <TextField label="ID Number" fullWidth margin="normal" value={idnumber} onChange={(e) => setID(e.target.value)} />
         <TextField label="First Name" fullWidth margin="normal" value={firstname} onChange={(e) => setFirstName(e.target.value)} />
@@ -69,4 +62,3 @@ function AddStudent() {
 }
 
 export default AddStudent;
-

@@ -1,26 +1,10 @@
 [
   {
-    "idnumber": "123456",
-    "firstname": "a",
-    "lastname": "b",
-    "middlename": "c",
-    "course": "s",
+    "idnumber": "34599191",
+    "firstname": "Erien Miko",
+    "lastname": "Bambalan",
+    "middlename": "Magday",
+    "course": "BSIT",
     "year": "3"
-  },
-  {
-    "idnumber": "123",
-    "firstname": "qq",
-    "lastname": "qq",
-    "middlename": "qq",
-    "course": "qq",
-    "year": "qq"
-  },
-  {
-    "idnumber": "123132",
-    "firstname": "12312",
-    "lastname": "31231",
-    "middlename": "23123",
-    "course": "123123",
-    "year": "123123"
   }
 ]

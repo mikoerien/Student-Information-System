@@ -7,16 +7,22 @@ function ViewStudent() {
   const [students, setStudents] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [editedStudentData, setEditedStudentData] = useState({});
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    axios.get(`http://localhost:1337/viewstudent`)
+    fetchStudents();
+  }, []);
+
+  const fetchStudents = () => {
+    axios.get(`http://localhost:1337/viewstudents`) // Corrected URL to viewstudents
       .then((response) => {
         setStudents(response.data);
       })
       .catch((error) => {
         console.error("Error fetching student data:", error);
+        setErrorMessage("Error fetching student data");
       });
-  }, []);
+  };
 
   const handleEditStudent = (student) => {
     setEditedStudentData({ ...student });
@@ -31,25 +37,18 @@ function ViewStudent() {
     }));
   };
 
-  function handleSaveChanges() {
-    axios.put(`http://localhost:1337/editStudent`, editedStudentData)
+  const handleSaveChanges = () => {
+    axios.put(`http://localhost:1337/editstudent`, editedStudentData) // Corrected URL to editstudent
       .then(response => {
         console.log("Student data updated successfully!");
-       
-        const updatedStudents = students.map(student => {
-          if (student.idnumber === editedStudentData.idnumber) {
-            return editedStudentData;
-          } else {
-            return student;
-          }
-        });
-        setStudents(updatedStudents);
+        fetchStudents(); // Refresh students data after successful update
         handleCloseModal();
       })
       .catch(error => {
         console.error("Error updating student data:", error);
+        setErrorMessage("Error updating student data");
       });
-  }
+  };
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -58,6 +57,7 @@ function ViewStudent() {
   return (
     <div className="view-container">
       <h1 style={{ textAlign: "center" }}>View Students</h1>
+      {errorMessage && <p>Error: {errorMessage}</p>}
       <TableContainer component={Paper} style={{ textAlign: "right", width: "100%" }}>
         <Table aria-label="simple table">
           <TableHead>
@@ -110,47 +110,58 @@ function ViewStudent() {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Edit Student Details
           </Typography>
-          <Typography>{editedStudentData.idnumber}</Typography>
-          <TextField
-            label="First Name"
-            fullWidth
-            margin="normal"
-            name="firstname"
-            value={editedStudentData.firstname}
-            onChange={handleInputChange}
-          />
-          <TextField
-            label="Last Name"
-            fullWidth
-            margin="normal"
-            name="lastname"
-            value={editedStudentData.lastname}
-            onChange={handleInputChange}
-          />
-          <TextField
-            label="Middle Name"
-            fullWidth
-            margin="normal"
-            name="middlename"
-            value={editedStudentData.middlename}
-            onChange={handleInputChange}
-          />
-          <TextField
-            label="Course"
-            fullWidth
-            margin="normal"
-            name="course"
-            value={editedStudentData.course}
-            onChange={handleInputChange}
-          />
-          <TextField
-            label="Year"
-            fullWidth
-            margin="normal"
-            name="year"
-            value={editedStudentData.year}
-            onChange={handleInputChange}
-          />
+          {editedStudentData && (
+            <>
+              <TextField
+                label="ID Number"
+                fullWidth
+                margin="normal"
+                name="idnumber"
+                value={editedStudentData.idnumber}
+                disabled // ID should not be editable
+              />
+              <TextField
+                label="First Name"
+                fullWidth
+                margin="normal"
+                name="firstname"
+                value={editedStudentData.firstname}
+                onChange={handleInputChange}
+              />
+              <TextField
+                label="Last Name"
+                fullWidth
+                margin="normal"
+                name="lastname"
+                value={editedStudentData.lastname}
+                onChange={handleInputChange}
+              />
+              <TextField
+                label="Middle Name"
+                fullWidth
+                margin="normal"
+                name="middlename"
+                value={editedStudentData.middlename}
+                onChange={handleInputChange}
+              />
+              <TextField
+                label="Course"
+                fullWidth
+                margin="normal"
+                name="course"
+                value={editedStudentData.course}
+                onChange={handleInputChange}
+              />
+              <TextField
+                label="Year"
+                fullWidth
+                margin="normal"
+                name="year"
+                value={editedStudentData.year}
+                onChange={handleInputChange}
+              />
+            </>
+          )}
           <Button variant="contained" onClick={handleSaveChanges}>Save Changes</Button>
         </Box>
       </Modal>
