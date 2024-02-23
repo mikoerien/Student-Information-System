@@ -117,15 +117,15 @@ function ViewStudent() {
                 fullWidth
                 margin="normal"
                 name="idnumber"
-                value={editedStudentData.idnumber}
-                disabled // ID should not be editable
+                value={editedStudentData && editedStudentData.idnumber}
+                disabled
               />
               <TextField
                 label="First Name"
                 fullWidth
                 margin="normal"
                 name="firstname"
-                value={editedStudentData.firstname}
+                value={editedStudentData && editedStudentData.firstname}
                 onChange={handleInputChange}
               />
               <TextField
@@ -133,7 +133,7 @@ function ViewStudent() {
                 fullWidth
                 margin="normal"
                 name="lastname"
-                value={editedStudentData.lastname}
+                value={editedStudentData && editedStudentData.lastname}
                 onChange={handleInputChange}
               />
               <TextField
@@ -141,7 +141,7 @@ function ViewStudent() {
                 fullWidth
                 margin="normal"
                 name="middlename"
-                value={editedStudentData.middlename}
+                value={editedStudentData && editedStudentData.middlename}
                 onChange={handleInputChange}
               />
               <TextField
@@ -149,7 +149,7 @@ function ViewStudent() {
                 fullWidth
                 margin="normal"
                 name="course"
-                value={editedStudentData.course}
+                value={editedStudentData && editedStudentData.course}
                 onChange={handleInputChange}
               />
               <TextField
@@ -157,7 +157,7 @@ function ViewStudent() {
                 fullWidth
                 margin="normal"
                 name="year"
-                value={editedStudentData.year}
+                value={editedStudentData && editedStudentData.year}
                 onChange={handleInputChange}
               />
             </>
