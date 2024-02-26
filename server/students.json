@@ -1,26 +1,18 @@
 [
   {
-    "idnumber": "2",
-    "firstname": "S",
-    "lastname": "S",
-    "middlename": "S",
-    "course": "fdghf",
-    "year": "2"
+    "ID": "1",
+    "First": "ass",
+    "Last": "ass",
+    "Middle": "ass",
+    "Course": "ass",
+    "Year": "1"
   },
   {
-    "idnumber": "2",
-    "firstname": "S",
-    "lastname": "S",
-    "middlename": "S",
-    "course": "S",
-    "year": "2"
-  },
-  {
-    "idnumber": "111",
-    "firstname": "asdasd",
-    "lastname": "asdasd",
-    "middlename": "asdasd",
-    "course": "asdasd",
-    "year": "asdasd"
+    "ID": "2",
+    "First": "ss",
+    "Last": "ss",
+    "Middle": "ss",
+    "Course": "ss",
+    "Year": "2"
   }
 ]
