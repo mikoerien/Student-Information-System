@@ -69,7 +69,7 @@ function handleIDChange(event) {
   if (/^\d{0,8}$/.test(value)) { // Using regex to allow only exactly 8 digits
     setID(value);
   } else {
-    alert("ID Number should contain only up to 8 digits.");
+    alert("ID Number should contain only up to 8 digits and numbers.");
   }
 }
 

@@ -25,6 +25,11 @@ function Sidebar() {
             <Info /> View Student
           </Link>
         </li>
+        <li>
+          <Link to="/viewusers">
+            <Info /> View Users
+          </Link>
+        </li>
       </ul>
     </div>
   );

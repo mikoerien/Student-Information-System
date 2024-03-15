@@ -13,7 +13,6 @@ function ViewStudent() {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [editedStudent, setEditedStudent] = useState(null); 
 
-  // State to manage error messages
   const [errorMessages, setErrorMessages] = useState({
     Year: "",
     First: "",

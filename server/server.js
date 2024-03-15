@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const app = express();
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -6,6 +7,21 @@ const fs = require("fs");
 
 app.use(cors());
 app.use(bodyParser.json());
+
+// MongoDB connection
+mongoose.connect('mongodb://localhost:27017/mydatabase', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.once('open', () => {
+  console.log('Connected to MongoDB');
+});
+
+// Define mongoose schema and models here if needed
+
+// Define routes
 
 app.get("/", (req, res) => {
     res.send("Hello, world! ");
