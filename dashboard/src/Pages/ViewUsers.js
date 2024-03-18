@@ -1,108 +1,209 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import './ViewUsers.css';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import { Table, TableContainer, TableHead, TableBody, TableRow, TableCell, Paper } from '@mui/material';
+import axios from 'axios';
+import { Table, TableContainer, TableHead, TableBody, TableRow, TableCell, Paper, Button, TextField } from "@mui/material";
 
 function ViewUsers() {
-  const [users, setUsers] = useState([]);
-  const [addUserModalOpen, setAddUserModalOpen] = useState(false);
-  const [newUser, setNewUser] = useState({
-    firstName: '',
-    lastName: '',
-    middleName: '',
-    email: '',
-    password: '',
-  });
+    const [users, setUsers] = useState([]);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalEditOpen, setEditModalOpen] = useState(false);
+    const [editedUser, setEditedUser] = useState(null);
+    const [editFirst, setEditFirst] = useState("");
+    const [editLast, setEditLast] = useState("");
+    const [editMiddle, setEditMiddle] = useState("");
+    const [editEmail, setEditEmail] = useState("");
+    const [editPassword, setEditPassword] = useState("");
+    const [firstNameError, setFirstNameError] = useState(false);
+    const [lastNameError, setLastNameError] = useState(false);
+    const [middleNameError, setMiddleNameError] = useState(false);
+    const [emailRequiredError, setEmailRequiredError] = useState(false);
+    const [passwordError, setPasswordError] = useState(false);
 
-  useEffect(() => {
-    // Fetch users data from API
-    axios.get('http://localhost:1337/viewusers')
-      .then((response) => {
-        setUsers(response.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching user data:', error);
-      });
-  }, []);
+    useEffect(() => {
+        fetchData();
+    }, []);
 
-  function handleAddUser() {
-    // Add user logic here, e.g., making an API call to add user to the database
-    axios.post('http://localhost:1337/adduser', newUser)
-      .then((response) => {
-        console.log('User added successfully:', response.data);
-        // Reset newUser state after adding user
-        setNewUser({
-          firstName: '',
-          lastName: '',
-          middleName: '',
-          email: '',
-          password: '',
-        });
-        // Close the modal
-        setAddUserModalOpen(false);
-      })
-      .catch((error) => {
-        console.error('Error adding user:', error);
-      });
-  }
+    const fetchData = () => {
+        axios.get(`http://localhost:1337/viewUsers`)
+            .then((response) => {
+                setUsers(response.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching user data:", error);
+            });
+    }
 
-  return (
-    <>
-      <div className="view-container">
-        <h1>View Users</h1>
-        <Button variant="contained" onClick={() => setAddUserModalOpen(true)}>Add User</Button>
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>First Name</TableCell>
-                <TableCell>Last Name</TableCell>
-                <TableCell>Middle Name</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Password</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {users.map((user) => (
-                <TableRow key={user._id}>
-                  <TableCell>{user.firstName}</TableCell>
-                  <TableCell>{user.lastName}</TableCell>
-                  <TableCell>{user.middleName}</TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.password}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
+    function handleAdd() {
+        setModalOpen(true);
+    };
 
-      <Modal open={addUserModalOpen} onClose={() => setAddUserModalOpen(false)}>
-        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', boxShadow: 24, p: 4 }}>
-          <Typography variant="h6" component="h2" fontWeight="bold" align="left">Add User</Typography>
-          <div style={{ marginBottom: '16px' }}/>
-          <TextField variant="outlined" label="First Name" name="firstName" value={newUser.firstName} onChange={(e) => setNewUser({ ...newUser, firstName: e.target.value })} required />
-          <div style={{ marginBottom: '16px' }}/>
-          <TextField variant="outlined" label="Last Name" name="lastName" value={newUser.lastName} onChange={(e) => setNewUser({ ...newUser, lastName: e.target.value })} required />
-          <div style={{ marginBottom: '16px' }}/>
-          <TextField variant="outlined" label="Middle Name" name="middleName" value={newUser.middleName} onChange={(e) => setNewUser({ ...newUser, middleName: e.target.value })} />
-          <div style={{ marginBottom: '16px' }}/>
-          <TextField variant="outlined" label="Email" name="email" value={newUser.email} onChange={(e) => setNewUser({ ...newUser, email: e.target.value })} required />
-          <div style={{ marginBottom: '16px' }}/>
-          <TextField variant="outlined" label="Password" name="password" type="password" value={newUser.password} onChange={(e) => setNewUser({ ...newUser, password: e.target.value })} required />
-          <div style={{ marginBottom: '16px' }}/>
-          <Box sx={{ display: 'inline-flex', gap: '8px' }}>
-            <Button variant="contained" onClick={handleAddUser}>Add</Button>
-            <Button variant="contained" onClick={() => setAddUserModalOpen(false)}>Close</Button>
-          </Box>
-        </Box>
-      </Modal>
-    </>
-  );
+    function handleEdit(user) {
+        setEditedUser(user);
+        setEditFirst(user.First);
+        setEditLast(user.Last);
+        setEditMiddle(user.Middle);
+        setEditEmail(user.Email);
+        setEditPassword(user.Password);
+        setEditModalOpen(true);
+    };
+
+    function handleCloseModal() {
+        setModalOpen(false);
+        setEditModalOpen(false);
+        setEditedUser(null);
+        clearErrors();
+    };
+
+    function clearErrors() {
+        setFirstNameError(false);
+        setLastNameError(false);
+        setMiddleNameError(false);
+        setEmailRequiredError(false);
+        setPasswordError(false);
+    }
+
+    function handleAddUser() {
+        clearErrors();
+
+        if (!editFirst) {
+            setFirstNameError(true);
+        }
+
+        if (!editLast) {
+            setLastNameError(true);
+        }
+
+        if (!editMiddle) {
+            setMiddleNameError(true);
+        }
+
+        if (!editEmail) {
+            setEmailRequiredError(true);
+        }
+
+        if (!editPassword) {
+            setPasswordError(true);
+        }
+
+        if (!editFirst || !editLast || !editMiddle || !editEmail || !editPassword) {
+            return;
+        }
+
+        const userData = {
+            First: editFirst,
+            Last: editLast,
+            Middle: editMiddle,
+            Email: editEmail,
+            Password: editPassword,
+        };
+
+        axios.post("http://localhost:1337/addUser", userData)
+            .then(response => {
+                console.log("User added successfully:", response.data);
+                setEditFirst("");
+                setEditLast("");
+                setEditMiddle("");
+                setEditEmail("");
+                setEditPassword("");
+                setModalOpen(false);
+                fetchData();
+            })
+            .catch(error => {
+                console.error("Error adding user:", error);
+            });
+    }
+
+    function handleSaveEdit() {
+        const userData = {
+            First: editFirst,
+            Last: editLast,
+            Middle: editMiddle,
+            Email: editEmail,
+            Password: editPassword,
+        };
+
+        axios.put(`http://localhost:1337/editUser/${editedUser.Email}`, userData)
+            .then(response => {
+                console.log("User updated successfully:", response.data);
+                setEditModalOpen(false);
+                fetchData();
+            })
+            .catch(error => {
+                console.error("Error updating user:", error);
+            });
+    }
+
+    return (
+        <div className="view-container">
+            <h3>View Users</h3>
+            <Button variant="contained" onClick={handleAdd}>ADD USER</Button>
+            <h6>MUI Table</h6>
+            <Modal open={modalOpen} onClose={handleCloseModal}>
+                <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', boxShadow: 24, p: 4 }}>
+                    <Typography variant="h6" component="h2" fontWeight="bold" align="left">Add User Information</Typography>
+                    <div style={{ marginBottom: '16px' }} />
+                    <TextField variant="outlined" label="Email" value={editEmail} onChange={(e) => setEditEmail(e.target.value)} error={emailRequiredError} helperText={emailRequiredError && "Email is required"} />
+                    <div style={{ marginBottom: '16px' }} />
+                    <TextField variant="outlined" label="First Name" value={editFirst} onChange={(e) => setEditFirst(e.target.value)} error={firstNameError} helperText={firstNameError && "First Name is required"} />
+                    <div style={{ marginBottom: '16px' }} />
+                    <TextField variant="outlined" label="Last Name" value={editLast} onChange={(e) => setEditLast(e.target.value)} error={lastNameError} helperText={lastNameError && "Last Name is required"} />
+                    <div style={{ marginBottom: '16px' }} />
+                    <TextField variant="outlined" label="Middle Name" value={editMiddle} onChange={(e) => setEditMiddle(e.target.value)} error={middleNameError} helperText={middleNameError && "Middle Name is required"} />
+                    <div style={{ marginBottom: '16px' }} />
+                    <TextField type="password" variant="outlined" label="Password" value={editPassword} onChange={(e) => setEditPassword(e.target.value)} error={passwordError} helperText={passwordError && "Password is required"} />
+                    <div style={{ marginBottom: '16px' }} />
+                    <Button variant="contained" onClick={handleAddUser}>Add User</Button>
+                </Box>
+            </Modal>
+
+            <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 100 }} aria-label="simple table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell align="center">Email</TableCell>
+                            <TableCell align="center">First Name</TableCell>
+                            <TableCell align="center">Last Name</TableCell>
+                            <TableCell align="center">Middle Name</TableCell>
+                            <TableCell align="center">Actions</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {users && users.map(user => (
+                            <TableRow key={user.Email}>
+                                <TableCell align="center">{user.Email}</TableCell>
+                                <TableCell align="center">{user.First}</TableCell>
+                                <TableCell align="center">{user.Last}</TableCell>
+                                <TableCell align="center">{user.Middle}</TableCell>
+                                <TableCell align="center">
+                                    <Button variant="contained" onClick={() => handleEdit(user)}>EDIT</Button>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <Modal open={modalEditOpen} onClose={handleCloseModal}>
+                <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', boxShadow: 24, p: 4 }}>
+                    <Typography variant="h6" component="h2" fontWeight="bold" align="left">User Information</Typography>
+                    <div style={{ marginBottom: '16px' }} />
+                    <TextField variant="outlined" label="Email" value={editEmail} onChange={(e) => setEditEmail(e.target.value)} disabled />
+                    <div style={{ marginBottom: '16px' }} />
+                    <TextField variant="outlined" label="First Name" value={editFirst} onChange={(e) => setEditFirst(e.target.value)} />
+                    <div style={{ marginBottom: '16px' }} />
+                    <TextField variant="outlined" label="Last Name" value={editLast} onChange={(e) => setEditLast(e.target.value)} />
+                    <div style={{ marginBottom: '16px' }} />
+                    <TextField variant="outlined" label="Middle Name" value={editMiddle} onChange={(e) => setEditMiddle(e.target.value)} />
+                    <div style={{ marginBottom: '16px' }} />
+                    <TextField type="password" variant="outlined" label="Password" value={editPassword} onChange={(e) => setEditPassword(e.target.value)} />
+                    <div style={{ marginBottom: '16px' }} />
+                    <Button variant="contained" onClick={handleSaveEdit}>Save</Button>
+                </Box>
+            </Modal>
+        </div>
+    );
 }
 
 export default ViewUsers;
