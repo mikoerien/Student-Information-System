@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from "react";
-import './ViewUsers.css';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import axios from 'axios';
-
-import { Table, TableContainer, TableHead, TableBody, TableRow, TableCell, Paper } from "@mui/material";
+import { Table, TableContainer, TableHead, TableBody, TableRow, TableCell, Paper } from '@mui/material';
 
 function ViewUsers() {
   const [users, setUsers] = useState([]);
@@ -17,40 +15,45 @@ function ViewUsers() {
     lastName: '',
     middleName: '',
     email: '',
-    password: ''
+    password: '',
   });
 
   useEffect(() => {
     // Fetch users data from API
-    axios.get(`http://localhost:1337/viewUsers`)
+    axios.get('http://localhost:1337/viewusers')
       .then((response) => {
         setUsers(response.data);
       })
       .catch((error) => {
-        console.error("Error fetching user data:", error);
+        console.error('Error fetching user data:', error);
       });
   }, []);
 
   function handleAddUser() {
     // Add user logic here, e.g., making an API call to add user to the database
-    console.log("Adding user:", newUser);
-    // Reset newUser state after adding user
-    setNewUser({
-      firstName: '',
-      lastName: '',
-      middleName: '',
-      email: '',
-      password: ''
-    });
-    // Close the modal
-    setAddUserModalOpen(false);
+    axios.post('http://localhost:1337/adduser', newUser)
+      .then((response) => {
+        console.log('User added successfully:', response.data);
+        // Reset newUser state after adding user
+        setNewUser({
+          firstName: '',
+          lastName: '',
+          middleName: '',
+          email: '',
+          password: '',
+        });
+        // Close the modal
+        setAddUserModalOpen(false);
+      })
+      .catch((error) => {
+        console.error('Error adding user:', error);
+      });
   }
 
   return (
     <>
       <div className="view-container">
-      <h1>View Users</h1>
-
+        <h1>View Users</h1>
         <Button variant="contained" onClick={() => setAddUserModalOpen(true)}>Add User</Button>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -65,7 +68,7 @@ function ViewUsers() {
             </TableHead>
             <TableBody>
               {users.map((user) => (
-                <TableRow key={user.id}>
+                <TableRow key={user._id}>
                   <TableCell>{user.firstName}</TableCell>
                   <TableCell>{user.lastName}</TableCell>
                   <TableCell>{user.middleName}</TableCell>
